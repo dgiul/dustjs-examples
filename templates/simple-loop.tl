@@ -1,0 +1,1 @@
+{#smartphones}<tr><td>{manuf}</td><td>{model}</td><td>{os}</td></tr>{/smartphones}

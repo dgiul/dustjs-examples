@@ -1,0 +1,45 @@
+<!--
+
+	Typically you'd want to compile a Dust.js template on the server, which turns it into a
+	JS file, and that's the file you'd serve to the client rather than the raw tempalte file
+		
+	But what if you don't want to do it that way, and you want everything to happen on the client?
+	That's what this example demonstrates
+
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Simple example with dust.js</title>
+</head>
+<body>
+	<div id='content'></div>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="js/lib/dust-full-2.0.3.js"></script>
+
+	<script>
+		var json = { val1:'This is a', val2:'client rendered', val3:'template'};
+
+		// Load the template file via an ajax request, then process it
+		$.get(["templates/simple.tl"], function(data) {
+
+			// Compile the template and add it to Dust's template cache with the name 'content'
+        	dust.loadSource( dust.compile(data, 'content') );
+
+        	dust.render('content', json, function(err, out) {
+        		if (err) {
+        			// Oops, something didn't go as planned, let's see what it was
+        			alert(err);
+        		} else {
+        			$('#content').html(out);
+        		};
+
+        	});
+
+        });
+	</script>
+</body>
+</html>

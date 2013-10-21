@@ -1,0 +1,55 @@
+<!--
+
+	Another example of client side rendering of the template, this time with a wee bit more complexity
+
+	Rather than having a 1-to-1 match of data fields to tempalte fields, we have multiple objects in the 
+	JSON array that the renderer must loop through
+
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Simple loop example with dust.js</title>
+</head>
+<body>
+	<table border=1 cellpadding=10>
+		<thead><th>Manufacturer</th><th>Model</th><th>OS</th></thead>
+		<tbody id='content'></tbody>
+	</table>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="js/lib/dust-full-2.0.3.js"></script>
+
+	<script>
+		var json = 
+			{ smartphones: [ 
+				{manuf: 'Apple', model: 'iPhone', os: 'iOS'}, 
+				{manuf: 'BlackBerry', model: 'Z10', os: 'BB10'}, 
+				{manuf: 'HTC', model: 'One', os: 'Android'}, 
+				{manuf: 'Motorola', model: 'Moto X', os: 'Android'}, 
+				{manuf: 'Nokia', model: '1020', os: 'Windows Phone'}, 
+				{manuf: 'Samsung', model: 'Galaxy S4 GPE', os: 'Android'}
+			] };
+
+		// Load the template file via an ajax request, then process it
+		$.get(["templates/simple-loop.tl"], function(data) {
+
+			// Compile the template and add it to Dust's template cache with the name 'content'
+        	dust.loadSource( dust.compile(data, 'content') );
+
+        	dust.render('content', json, function(err, out) {
+        		if (err) {
+        			// Oops, something didn't go as planned, let's see what it was
+        			alert(err);
+        		} else {
+        			$('#content').html(out);
+        		};
+
+        	});
+
+        });
+	</script>
+</body>
+</html>
