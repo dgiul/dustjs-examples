@@ -1,0 +1,74 @@
+<!--
+
+	This example builds upon what's was in client-render-loop.html and introduces Backbone.js
+
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Simple loop example with dust.js</title>
+</head>
+<body>
+	<table border=1 cellpadding=10>
+		<thead><th>Manufacturer</th><th>Model</th><th>OS</th></thead>
+		<tbody id='content'></tbody>
+	</table>
+
+	<script type="text/javascript" src="js/lib/jquery.min.js"></script>
+	<script type="text/javascript" src="js/lib/dust-full-2.0.3.js"></script>
+	<script type="text/javascript" src="js/lib/underscore.js"></script>
+	<script type="text/javascript" src="js/lib/backbone.js"></script>
+
+	<script>
+
+		var json = 
+			{ smartphones: [ 
+				{manuf: 'Apple', model: 'iPhone', os: 'iOS'}, 
+				{manuf: 'BlackBerry', model: 'Z10', os: 'BB10'}, 
+				{manuf: 'HTC', model: 'One', os: 'Android'}, 
+				{manuf: 'Motorola', model: 'Moto X', os: 'Android'}, 
+				{manuf: 'Nokia', model: '1020', os: 'Windows Phone'}, 
+				{manuf: 'Samsung', model: 'Galaxy S4 GPE', os: 'Android'}
+			] };
+
+		var AppView = Backbone.View.extend({
+			// el - stands for element. Every view has an element in which HTML will be rendered
+			el: '#content',
+			// The template we compile and load in the ajax request below
+			template: 'content',
+			// Initialize - the first thing that's called when a few is instantiated
+			initialize: function() {
+				this.render();
+			},
+			// $el - this is a cached jQuery object (el) in which you can use jQuery functions, push content. etc.
+			render: function() {
+
+				// Use bind at the end of the function to rescope what "this" means
+				dust.render(this.template, json, function(err, out) {
+					if (err) {
+	        			// Oops, something didn't go as planned, let's see what it was
+	        			alert(err);
+	        		} else {
+	        			this.$el.html(out);
+	        		};
+				}.bind(this));
+
+				return this;
+			}
+		});
+
+		// Load the template file via an ajax request, then process it
+		$.get(["templates/simple-loop.tl"], function(data) {
+
+			// Compile the template and add it to Dust's template cache with the name 'content'
+        	dust.loadSource( dust.compile(data, 'content') );
+
+        	var appView = new AppView();
+
+        });
+
+	</script>
+</body>
+</html>
